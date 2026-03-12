@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa Peplab - Peptides Promo Week</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{--primary:#0ea5a4;--bg:#f4f7fb;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
+body{background:var(--bg);}
+
+/* HEADER */
+header{
+background:white;height:65px;display:flex;align-items:center;
+justify-content:space-between;padding:0 5%;
+box-shadow:0 4px 25px rgba(0,0,0,0.06);
+position:sticky;top:0;z-index:1000;
+}
+.logo{font-size:22px;font-weight:800;}
+.logo span{color:var(--primary);}
+.desktop-nav{display:flex;align-items:center;gap:18px;font-size:14px;}
+.nav-item{cursor:pointer;font-weight:500;}
+
+/* HERO */
+.hero{
+display:grid;grid-template-columns:1fr 1fr;
+gap:30px;padding:40px 5%;align-items:center;
+}
+.hero img{width:100%;border-radius:18px;}
+
+/* CONTAINER & PRODUCTS */
+.container{padding:20px 5% 120px;}
+.products{
+display:grid;grid-template-columns:repeat(4,1fr);
+gap:18px;
+}
+.section-title{font-size:22px;font-weight:700;margin:20px 0 10px;}
+.card{
+background:white;border-radius:15px;padding:15px;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+cursor:pointer;transition:.25s;display:flex;flex-direction:column;justify-content:space-between;
+}
+.card:hover{transform:translateY(-5px);}
+.card img{
+width:100%;height:140px;object-fit:cover;
+border-radius:12px;margin-bottom:8px;
+}
+.price{color:var(--primary);font-weight:700;margin-top:6px;}
+.card button{margin-top:8px;background:var(--primary);color:white;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;}
+
+/* MODALS */
+.modal{
+position:fixed;inset:0;background:rgba(0,0,0,0.5);
+display:none;align-items:center;justify-content:center;z-index:2000;padding:10px;
+}
+.modal-box{
+background:white;padding:25px;border-radius:15px;
+max-width:520px;width:100%;
+box-shadow:0 15px 40px rgba(0,0,0,0.15);
+max-height:90vh;overflow-y:auto;
+}
+input{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:1px solid #ddd;}
+button{padding:10px 14px;border:none;border-radius:8px;margin-top:10px;background:var(--primary);color:white;cursor:pointer;}
+
+/* SOCIAL */
+.social{
+position:fixed;
+bottom:18px;
+right:18px;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:4000;
+}
+.social a{
+width:46px;height:46px;border-radius:50%;
+background:white;
+display:flex;align-items:center;justify-content:center;
+box-shadow:0 8px 20px rgba(0,0,0,0.18);
+}
+.social img{width:24px;}
+
+/* TESTIMONIAL */
+.testimonial{
+position:fixed;
+bottom:110px;
+left:12px;
+max-width:260px;
+background:white;
+padding:14px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.18);
+font-size:13px;
+display:none;
+z-index:5000;
+}
+
+@media(max-width:1000px){
+.hero{grid-template-columns:1fr;}
+.products{grid-template-columns:repeat(2,1fr);}
+.desktop-nav{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">Nexa <span>Peplab</span></div>
+<div class="desktop-nav">
+<div id="userNameDisplay"></div>
+<div class="nav-item" onclick="openRegister()">Register</div>
+</div>
+</header>
+
+<section class="hero">
+<div>
+<h1>Premium Peptides Promo Week</h1>
+<p>Trusted peptides with fast global delivery.</p>
+<br> 
+<p style="color:red;"><b>NOTE:</b> Message us directly by clicking on our social media if what you want is not listed on our site yet.</p>
+</div>
+</section>
+
+<div class="container">
+<div class="section-title">🔥 Hot Selling Peptides</div>
+<div class="products" id="hotProducts"></div>
+
+<div class="section-title">All Peptides</div>
+<div class="products" id="products"></div>
+</div>
+
+<!-- PRODUCT VIEW MODAL -->
+<div class="modal" id="viewModal">
+<div class="modal-box">
+<img id="vImg" style="width:100%;border-radius:12px;margin-bottom:12px;">
+<h2 id="vName"></h2>
+<p><b>Strength:</b> <span id="vStrength"></span></p>
+<p><b>Packaging Type:</b> <span id="vPackType"></span></p>
+<p><b>Packaging Size:</b> <span id="vPackSize"></span></p>
+<p><b>Brand:</b> <span id="vBrand"></span></p>
+<p><b>Manufacturer:</b> <span id="vManufacturer"></span></p>
+<p><b>Prescription / Non Prescription:</b> <span id="vPrescription"></span></p>
+<p><b>Composition:</b> <span id="vComposition"></span></p>
+<p id="vDesc" style="margin-top:10px;"> </p>
+<button onclick="openContact()">Order Now</button>
+<button onclick="toggleReadMore()" id="readMoreBtn">Read more</button>
+<button onclick="closeView()">Cancel</button>
+
+</div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal" id="registerModal">
+<div class="modal-box">
+<h2>Create Account</h2>
+<input id="regName" placeholder="Full Name" required>
+<input id="regEmail" placeholder="Email" required>
+<input id="regPhone" placeholder="Phone Number" required>
+<input id="regReferral" placeholder="Referral Code (optional)">
+<button onclick="registerUser()">Register</button>
+<button onclick="closeRegister()">Cancel</button>
+</div>
+</div>
+
+<!-- CONTACT MODAL -->
+<div class="modal" id="contactModal">
+<div class="modal-box">
+<h2>Choose Contact Method</h2>
+<p style="margin-top:8px;line-height:1.5;">
+⚠️ <b>Temporary Payment Notice</b><br>
+We are currently experiencing an issue with our online payment system.  
+It will be fixed very soon. In the meantime, you can proceed with your order by sending your full order details to our support team via WhatsApp or Telegram.  
+Please select one of the options below. 💬
+</p>
+<button onclick="contactOrder('whatsapp')">📱Order via WhatsApp</button>
+<button onclick="contactOrder('telegram')">✈️ Order via Telegram</button>
+<button onclick="closeContact()">Cancel</button>
+</div>
+</div>
+
+<div class="social">
+<a href="https://wa.me/17077531496" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+</a>
+<a href="https://instagram.com/NexaPeplab" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
+</a>
+<a href="https://t.me/NovaPepLab" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png">
+</a>
+</div>
+<div class="testimonial" id="testimonialBox"></div>
+
+<script>
+/* PRODUCTS */
+const products = [
+  {
+    id: 1,
+    name: "Semaglutide",
+    cat: "GLP1",
+    hot: true,
+    strength: "7 mg",
+    packType: "Box",
+    packSize: "1*10 Tablets",
+    brand: "Rybelsus",
+    manufacturer: "Novo Nordisk",
+    prescription: "Prescription",
+    composition: "Semaglutide",
+    descFull: "Rybelsus Semaglutide Tablets 7mg is an advanced oral medication prescribed for adults with type 2 diabetes to help manage and improve blood sugar (glucose) levels when diet and exercise alone are not sufficient. Containing the active ingredient semaglutide, Rybelsus 7mg belongs to the GLP-1 receptor agonist class of medicines, which work by stimulating insulin release, reducing glucagon secretion, and slowing gastric emptying, resulting in better glycaemic control and potentially contributing to weight loss in some individuals. Rybelsus Semaglutide Tablets 7mg are typically introduced after an initial 30-day course of the 3mg dose to help the body adjust, and the 7mg dose is then continued as directed by a healthcare professional, with the possibility of increasing to 14mg if further blood sugar control is needed. This once-daily tablet is taken on an empty stomach with water, at least 30 minutes before the first food, drink, or other oral medications of the day, to ensure optimal absorption and effectiveness. Rybelsus Semaglutide Tablets 7mg are not recommended for individuals with type 1 diabetes, diabetic ketoacidosis, a history of medullary thyroid carcinoma, or Multiple Endocrine Neoplasia syndrome type 2, and should be used with caution in patients with kidney disease, pancreatitis, or a fast heart rate. Common side effects may include nausea, vomiting, diarrhea, abdominal pain, indigestion, and sometimes low blood sugar, especially if combined with other diabetes medications, while more serious but rare risks include acute pancreatitis and diabetic eye disease. Rybelsus Semaglutide Tablets 7mg are not suitable for use during pregnancy, breastfeeding, or in children under 18 years of age. Regular monitoring of blood sugar and periodic assessment by a healthcare provider are recommended to ensure safety and efficacy while taking Rybelsus Semaglutide Tablets 7mg. This medication is available only by prescription and should be used strictly as directed by your doctor to maximize benefits and minimize risks, supporting better long-term outcomes for adults managing type 2 diabetes.",
+    price: 52,
+    img: "images/semaglutide.jpg",
+    country: "US"
+  },
+  {
+    id: 2,
+    name: "Retatrutide",
+    cat: "Peptides",
+    hot: true,
+    strength: "10 mg",
+    packType: "Vial",
+    packSize: "1 x 1 vial",
+    brand: "Peptide Science",
+    manufacturer: "Peptide Science",
+    prescription: "Prescription",
+    composition: "Retatrutide",
+    descFull: "Retatrutide is a notable triple-agonist peptide, which means it targets three different hormone receptors: GLP-1 (glucagon-like peptide-1), GIP (gastric inhibitory polypeptide), and glucagon. These hormones play vital roles in regulating blood sugar, appetite, and energy expenditure, making Retatrutide a promising candidate for treating obesity and potentially type 2 diabetes mellitus.",
+    price: Math.round(464941.87 * 0.00135),
+    img: "images/retatrutide.jpg",
+    country: "US"
+  },
+  {
+    id: 3,
+    name: "BPC-157 5mg",
+    cat: "Peptides",
+    hot: true,
+    strength: "5 mg",
+    packType: "Piece",
+    packSize: "1 Piece",
+    brand: "Peptide Science",
+    manufacturer: "Made in India",
+    prescription: "Research Use",
+    composition: "BPC-157",
+    descFull: "BPC-157 is an injectable peptide developed for alleviating stomach ulcers. A synthetic peptide that is being investigated for its regenerative effects. It shows high efficacy for rats suffering toxic or surgical trauma.",
+    price: Math.round(26597.67 * 0.00135),
+    img: "images/bpc-157.jpg",
+    country: "US"
+  },
+  {
+    id: 4,
+    name: "BPC 157+TB-500",
+    cat: "Peptides",
+    hot: true,
+    strength: "N/A",
+    packType: "Box",
+    packSize: "Vial",
+    brand: "Superior Peptide",
+    manufacturer: "Made in India",
+    prescription: "Research Use",
+    composition: "BPC-157 + TB-500",
+    descFull: "BPC-157 and TB-500 are popular peptides often combined for enhanced healing, with BPC-157 (Body Protection Compound) aiding gut, tendon, ligament repair, and nerve regeneration, while TB-500 (synthetic Thymosin Beta-4) promotes muscle repair, flexibility, and cell migration; together, they target inflammation, soft tissue damage, and recovery, though they are experimental, lack widespread FDA approval, and scientific evidence largely comes from animal studies or anecdotal reports, necessitating caution.",
+    price: Math.round(132988.37 * 0.00135),
+    img: "images/bpc-157-tb500.jpg",
+    country: "US"
+  },
+  {
+    id: 5,
+    name: "Ipamorelin 2mg Injection",
+    cat: "Peptides",
+    strength: "2mg-10mg",
+    packType: "Piece",
+    packSize: "2mgx5 vials",
+    brand: "Peptide Science",
+    manufacturer: "Made in India",
+    prescription: "Prescription",
+    composition: "Ipamorelin",
+    descFull: "Ipamorelin is a synthetic peptide that stimulates the natural production of growth hormone in the body. This implicates the peptide in a range of biological processes, including bone formation, muscle growth, and fat loss.",
+    price: Math.round(221647.29 * 0.00135),
+    img: "images/ipamorelin.jpg",
+    country: "US"
+  },
+  {
+    id: 6,
+    name: "Cjc25mg & Cjc 1295 Dac",
+    cat: "Peptides",
+    strength: "25 mg",
+    packType: "Box",
+    packSize: "1 ml Injection",
+    brand: "Peptide Science",
+    manufacturer: "Made in India",
+    prescription: "Prescription",
+    composition: "CJC-25 & CJC-1295 DAC",
+    descFull: "Most potent growth hormone releasing peptide. Speeds up muscle gain and fat loss. For maximum result stack with GHRP-6. Dosage: 200mcg/day, Empty Stomach (Early morning or Before bed); HalfLife: 8 days.",
+    price: Math.round(195788.44 * 0.00135),
+    img: "images/cjc25.jpg",
+    country: "US"
+  },
+  {
+    id: 7,
+    name: "HGH Fragment 176-191",
+    cat: "Peptides",
+    strength: "100 IU",
+    packType: "Box",
+    packSize: "1 Vial/Box",
+    brand: "HGH",
+    manufacturer: "Made in India",
+    prescription: "Prescription",
+    composition: "HGH Fragment",
+    descFull: "Human Growth Hormone Fragment 176–191 (hGH frag 176–191) is a peptide fragment of human growth hormone. It has erroneously been presented as a lipolytic peptide fragment based on extrapolations of clinical data pertaining to AOD9604, a modified form of hGH frag 176–191.",
+    price: Math.round(13298.84 * 0.00135),
+    img: "images/hgh-fragment.jpg",
+    country: "US"
+  },
+  {
+    id: 8,
+    name: "Melanotan 2 10 mg injection",
+    cat: "Peptides",
+    strength: "10 mg",
+    packType: "Ampoule",
+    packSize: "10 ml",
+    brand: "Peptide Science",
+    manufacturer: "Made in India",
+    prescription: "Prescription",
+    composition: "Melanotan II",
+    descFull: "Melanotan II is a synthetic peptide analogue of alpha-melanocyte-stimulating hormone, commonly used for increasing melanin production and skin pigmentation; it is supplied as a peptide formulation intended for research or export supply.",
+    price: Math.round(73882.43 * 0.00135),
+    img: "images/melanotan2.jpg",
+    country: "US"
+  },
+  {
+    id: 9,
+    name: "PT 141 (Bremelanotide)",
+    cat: "Peptides",
+    strength: "10 mg",
+    packType: "Vial",
+    packSize: "1 Vial",
+    brand: "Peptide Science",
+    manufacturer: "Made in US",
+    prescription: "Research Use",
+    composition: "PT-141",
+    descFull: "PT-141 is a synthetic peptide derived from the melanocortin family, specifically designed to influence sexual arousal and desire. It works by interacting with melanocortin receptors in the brain, which play a critical role in regulating sexual arousal and desire. Its effects are mediated through several key mechanisms and supports sexual performance for both genders.",
+    price: Math.round(124122.48 * 0.00135),
+    img: "images/pt141.jpg",
+    country: "US"
+  },
+  {
+    id: 10,
+    name: "DSIP 5MG Peptide",
+    cat: "Peptides",
+    strength: "5 mg",
+    packType: "Bottle",
+    packSize: "1 Bottle",
+    brand: "Peptide Science",
+    manufacturer: "Made in US",
+    prescription: "Research Use",
+    composition: "DSIP",
+    descFull: "DSIP, short for Delta Sleep-Inducing Peptide, is a neuropeptide originally discovered for its ability to induce delta sleep, the deep and restorative phase of sleep. Found in various regions of the brain, DSIP plays a crucial role in regulating sleep patterns and maintaining a healthy circadian rhythm.",
+    price: Math.round(81270.67 * 0.00135),
+    img: "images/dsip.jpg",
+    country: "US"
+  },
+  {
+    id: 11,
+    name: "DSIP 5mg (Peptide Sciences)",
+    cat: "Peptides",
+    strength: "5 mg",
+    packType: "Bottle",
+    packSize: "5 mg",
+    brand: "DSIP-5mg",
+    manufacturer: "Made in US",
+    prescription: "Research Use",
+    composition: "DSIP",
+    descFull: "Delta-sleep-inducing peptide is a neuropeptide that affects a number of endocrine and physiological processes within the central nervous system. DSIP is of primary interest for its abilities to reduce oxidative stress, normalize myocardial contractility, and may have potential in treatment of major depressive disorder.",
+    price: Math.round(295529.72 * 0.00135),
+    img: "images/dsip2.jpg",
+    country: "US"
+  },
+  {
+    id: 12,
+    name: "Kisspeptin-10 5mg",
+    cat: "Peptides",
+    strength: "5 mg",
+    packType: "Bottle",
+    packSize: "Vial",
+    brand: "Kisspeptin-10",
+    manufacturer: "Peptide Sciences",
+    prescription: "Research Use",
+    composition: "Kisspeptin-10",
+    descFull: "Kisspeptin-10 boluses potently evoke LH secretion in men, and continuous infusion increases testosterone, LH pulse frequency, and pulse size. Kisspeptin analogues have therapeutic potential as regulators of LH and thus testosterone secretion.",
+    price: Math.round(265976.75 * 0.00135),
+    img: "images/kisspeptin10.jpg",
+    country: "US"
+  }
+];
+
+
+function render(){
+display(products,"products");
+display(products.filter(p=>p.hot),"hotProducts");
+}
+render();
+
+function display(list,id){
+const box=document.getElementById(id);
+box.innerHTML="";
+list.forEach(p=>{
+box.innerHTML+=`
+<div class="card">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+<p>${p.descFull.substring(0,50)}...</p>
+<div class="price">$${p.price}</div>
+<button onclick="viewProduct(${p.id})">View</button>
+</div>`;
+});
+}
+
+let selected;
+let readMore=false;
+
+function viewProduct(id){
+selected=products.find(p=>p.id===id);
+vImg.src=selected.img;
+vName.innerText=selected.name;
+vStrength.innerText=selected.strength;
+vPackType.innerText=selected.packType;
+vPackSize.innerText=selected.packSize;
+vBrand.innerText=selected.brand;
+vManufacturer.innerText=selected.manufacturer;
+vPrescription.innerText=selected.prescription;
+vComposition.innerText=selected.composition;
+vDesc.innerText=selected.descFull.substring(0,300)+"...";
+readMore=false;
+readMoreBtn.innerText="Read more";
+viewModal.style.display="flex";
+}
+
+function toggleReadMore(){
+if(!readMore){
+vDesc.innerText=selected.descFull;
+readMoreBtn.innerText="Show less";
+readMore=true;
+}else{
+vDesc.innerText=selected.descFull.substring(0,300)+"...";
+readMoreBtn.innerText="Read more";
+readMore=false;
+}
+}
+
+function closeView(){viewModal.style.display="none";}
+
+/* REGISTER */
+function openRegister(){registerModal.style.display="flex";}
+function closeRegister(){registerModal.style.display="none";}
+function registerUser(){
+const name=regName.value;
+const email=regEmail.value;
+const phone=regPhone.value;
+const referral=regReferral.value;
+if(!name || !email || !phone){alert("Fill all required fields");return;}
+localStorage.setItem("userName",name);
+localStorage.setItem("userEmail",email);
+localStorage.setItem("userPhone",phone);
+/* SEND TO EMAIL */
+fetch("https://formsubmit.co/YOUR_EMAIL_HERE",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({name,email,phone,referral,site:"Nexa Peplab"})
+});
+userNameDisplay.innerText="Hi, "+name;
+alert("Registration successful");
+closeRegister();
+}
+
+/* ORDER FUNCTION */
+function openContact(){contactModal.style.display="flex";}
+function closeContact(){contactModal.style.display="none";}
+function contactOrder(type){
+const name=localStorage.getItem("userName")||"Not registered";
+const email=localStorage.getItem("userEmail")||"";
+const phone=localStorage.getItem("userPhone")||"";
+const message=`Hello Nexa Peplab,
+I want to place an order but I saw the notice about online payment issue.
+
+Order Details:
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Product: ${selected.name}
+Dose: ${selected.strength}
+Category: ${selected.cat}
+Price: $${selected.price}
+
+Please assist me with payment.`;
+const encoded=encodeURIComponent(message);
+if(type==="whatsapp"){window.open(`https://wa.me/17077531496?text=${encoded}`,"_blank");}
+if(type==="telegram"){window.open(`https://t.me/NovaPepLab?text=${encoded}`,"_blank");}
+}
+
+/* TESTIMONIALS */
+const names=["James Walker","Daniel Carter","Michael Bennett","Lucas Turner","Noah Foster","Ethan Collins","Liam Parker","Mason Cooper","Logan Reed","Jacob Hayes",
+"Benjamin Brooks","Henry Powell","Sebastian Ward","Jack Simmons","Owen Hughes","Wyatt Griffin","Levi Price","Asher Long","Julian Ross","Hudson Diaz",
+"Gabriel Ortiz","Samuel Jenkins","Carter Shaw","Isaac Freeman","Anthony Gardner","Dylan Stephens","Nathan Silva","Caleb West","Ryan Stone","Andrew Lane",
+"Joshua Carr","Christopher Woods","Isaiah Tucker","Eli Hunter","Jonathan Hicks","Thomas Pierce","Charles Fox","Aaron Marshall","Adrian Warren","Miles Webb",
+"Nolan Payne","Christian Walters","Colton Kelley","Luca Dunn","Easton Bowman","Cooper Brady","Angel Beck","Roman Larson","Connor Gill","Robert Doyle",
+"Jordan Hammond","Ian Rhodes","Austin Fletcher","Everett Miles","Brooks Banks","Xavier Vega","Parker Hart","Adam Grant","Silas Bishop","Kai Moreno",
+"Jose Cruz","Dominic Knight","Nicholas Barrett","Greyson Holland","Jace Bates","Wesley Schmidt","Kayden Sutton","Leonardo Norris","Axel Howard","Hunter Rice",
+"Santiago Delgado","Jeremiah Gibbs","Carson Wolfe","Jaxon Keller","Theo Barker","Maverick Chandler","Tristan Ortega","Blake Newton","Declan Shaw","Ryder Todd",
+"Zachary Walton","Victor Armstrong","Kevin Pratt","Cole Patterson","Finn Sanders","Marcus Bradley","Malachi Cross","Gavin Paul","Damian Holt","Tobias Lowe",
+"Archer Lawson","Reid Alvarez","Spencer Dennis","Rowan Erickson","Jasper Boyd","Oscar Hines","Elliot Osborne","Grant Boone","Bryson Carson","Ronan Drake"];
+const comments=[
+"Legit store, my order arrived faster than expected and packaging was perfect.",
+"Second order already, delivery was quick and everything looked professional.",
+"Very trustworthy website, communication and shipping speed were excellent.",
+"Customer support replied fast and helped track my order.",
+"Everything arrived sealed and well packed.",
+"Delivery was faster than I expected honestly.",
+"I was skeptical at first but the service was actually solid.",
+"Ordered twice now, both times smooth process.",
+"Packaging looked very professional.",
+"Definitely ordering again soon.",
+"Shipping updates were accurate and helpful.",
+"Great experience overall.",
+"My package arrived safely and discreetly.",
+"Fast dispatch after payment confirmation.",
+"Product quality looked excellent.",
+"Everything matched the description.",
+"The communication on Telegram was very responsive.",
+"Reliable store from my experience.",
+"Smooth order process and quick response.",
+"Very impressed with delivery speed.",
+"My friend recommended this site and it worked well.",
+"Order arrived earlier than expected.",
+"Professional packaging and labeling.",
+"Website is easy to use.",
+"Trusted vendor in my opinion.",
+"Second purchase went perfectly.",
+"Customer service was polite and helpful.",
+"Shipping time was surprisingly fast.",
+"Everything came exactly as ordered.",
+"Good experience overall.",
+"Really happy with how smooth it was.",
+"Arrived safely with no issues.",
+"Quick confirmation after ordering.",
+"Communication was clear.",
+"Reliable delivery service.",
+"Very satisfied with my purchase.",
+"Everything arrived intact.",
+"Smooth transaction process.",
+"Delivery updates were accurate.",
+"Secure packaging.",
+"Great first experience.",
+"Very professional service.",
+"Product arrived in perfect condition.",
+"Fast response from support.",
+"Happy with my order.",
+"Legitimate service.",
+"Everything worked as expected.",
+"Shipment tracking worked fine.",
+"Arrived quicker than I thought.",
+"Quality packaging.",
+"Good communication from seller.",
+"Delivery process was smooth.",
+"Order confirmed quickly.",
+"Happy with overall experience.",
+"Professional handling.",
+"Prompt responses.",
+"Reliable seller.",
+"Quick shipping.",
+"Accurate order.",
+"Trusted service.",
+"Good support.",
+"Safe packaging.",
+"Fast order processing.",
+"Very satisfied.",
+"Arrived on time.",
+"Everything was correct.",
+"Great packaging quality.",
+"Fast dispatch.",
+"Smooth checkout.",
+"Responsive team.",
+"Helpful support.",
+"Quick delivery.",
+"Good product condition.",
+"Secure shipment.",
+"Nice experience.",
+"Worked perfectly.",
+"Reliable store.",
+"Delivery was quick.",
+"Packaging was clean.",
+"Everything fine.",
+"Trusted purchase.",
+"Support was responsive.",
+"Arrived safely.",
+"Fast turnaround.",
+"Professional handling.",
+"Everything matched order.",
+"Good order tracking.",
+"Very smooth process.",
+"Great vendor.",
+"Shipment arrived safely.",
+"Good first order.",
+"Nice packaging.",
+"Quick shipment.",
+"Trustworthy site.",
+"Solid service.",
+"Everything good.",
+"Delivery confirmed fast.",
+"Accurate tracking.",
+"Safe delivery.",
+"Professional response.",
+"Great experience overall.",
+"Fast confirmation.",
+"Clear communication.",
+"Delivery successful.",
+"Everything looked legit.",
+"Smooth transaction.",
+"Very reliable.",
+"Shipping was quick.",
+"Support helped quickly.",
+"Everything intact.",
+"Good shipping time.",
+"Great service.",
+"Trusted store.",
+"Order received.",
+"All good.",
+"Nice process.",
+"Fast updates.",
+"Good reliability.",
+"Everything arrived.",
+"Professional delivery.",
+"Smooth shipping.",
+"Legit service.",
+"Good experience.",
+"Very smooth order.",
+"Quick service.",
+"Accurate order delivery.",
+"Responsive communication.",
+"Shipment came quickly.",
+"Good packaging.",
+"Secure delivery.",
+"Everything professional.",
+"Fast shipping speed.",
+"Reliable shipping.",
+"Trustworthy service.",
+"Delivery was fast.",
+"Order handled well.",
+"Very good service.",
+"Happy customer here.",
+"Shipment was smooth.",
+"Support responded fast.",
+"Everything worked well.",
+"Good overall experience.",
+"Quick response time.",
+"Smooth order handling.",
+"Delivery was reliable.",
+"Everything perfect.",
+"Service was fast.",
+"Great reliability.",
+"Solid vendor.",
+"Order arrived well.",
+"Quick assistance from support.",
+"Very clean packaging.",
+"Delivery was efficient.",
+"Reliable purchase.",
+"Everything delivered correctly."
+];
+function showTestimonial(){
+const name=names[Math.floor(Math.random()*names.length)];
+const comment=comments[Math.floor(Math.random()*comments.length)];
+testimonialBox.innerHTML=`<strong>${name}</strong> ${comment}`;
+testimonialBox.style.display="block";
+setTimeout(()=>testimonialBox.style.display="none",8000);
+}
+setInterval(showTestimonial,30000);
+setTimeout(showTestimonial,8000);
+
+/* AUTO LOAD USER NAME */
+const savedName=localStorage.getItem("userName");
+if(savedName) userNameDisplay.innerText="Hi, "+savedName;
+</script>
+
+</body>
+</html>
