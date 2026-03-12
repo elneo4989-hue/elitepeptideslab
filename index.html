@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexa Peplab - Peptides Promo Week</title>
+<title>ElitePeptides Lab</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -108,7 +108,7 @@ z-index:5000;
 <body>
 
 <header>
-<div class="logo">Nexa <span>Peplab</span></div>
+<div class="logo">ElitePeptides <span>Lab</span></div>
 <div class="desktop-nav">
 <div id="userNameDisplay"></div>
 <div class="nav-item" onclick="openRegister()">Register</div>
@@ -117,7 +117,7 @@ z-index:5000;
 
 <section class="hero">
 <div>
-<h1>Premium Peptides Promo Week</h1>
+
 <p>Trusted peptides with fast global delivery.</p>
 <br> 
 <p style="color:red;"><b>NOTE:</b> Message us directly by clicking on our social media if what you want is not listed on our site yet.</p>
@@ -172,23 +172,17 @@ z-index:5000;
 <p style="margin-top:8px;line-height:1.5;">
 ⚠️ <b>Temporary Payment Notice</b><br>
 We are currently experiencing an issue with our online payment system.  
-It will be fixed very soon. In the meantime, you can proceed with your order by sending your full order details to our support team via WhatsApp or Telegram.  
-Please select one of the options below. 💬
+It will be fixed very soon. In the meantime, you can proceed with your order by sending your full order details to our support team via Telegram.  
+
 </p>
-<button onclick="contactOrder('whatsapp')">📱Order via WhatsApp</button>
 <button onclick="contactOrder('telegram')">✈️ Order via Telegram</button>
 <button onclick="closeContact()">Cancel</button>
 </div>
 </div>
 
 <div class="social">
-<a href="https://wa.me/17077531496" target="_blank">
-<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
-</a>
-<a href="https://instagram.com/NexaPeplab" target="_blank">
-<img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
-</a>
-<a href="https://t.me/NovaPepLab" target="_blank">
+
+<a href="https://t.me/ElitePeptidesLab" target="_blank">
 <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png">
 </a>
 </div>
@@ -451,28 +445,6 @@ readMore=false;
 
 function closeView(){viewModal.style.display="none";}
 
-/* REGISTER */
-function openRegister(){registerModal.style.display="flex";}
-function closeRegister(){registerModal.style.display="none";}
-function registerUser(){
-const name=regName.value;
-const email=regEmail.value;
-const phone=regPhone.value;
-const referral=regReferral.value;
-if(!name || !email || !phone){alert("Fill all required fields");return;}
-localStorage.setItem("userName",name);
-localStorage.setItem("userEmail",email);
-localStorage.setItem("userPhone",phone);
-/* SEND TO EMAIL */
-fetch("https://formsubmit.co/YOUR_EMAIL_HERE",{
-method:"POST",
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({name,email,phone,referral,site:"Nexa Peplab"})
-});
-userNameDisplay.innerText="Hi, "+name;
-alert("Registration successful");
-closeRegister();
-}
 
 /* ORDER FUNCTION */
 function openContact(){contactModal.style.display="flex";}
@@ -481,7 +453,7 @@ function contactOrder(type){
 const name=localStorage.getItem("userName")||"Not registered";
 const email=localStorage.getItem("userEmail")||"";
 const phone=localStorage.getItem("userPhone")||"";
-const message=`Hello Nexa Peplab,
+const message=`Hello Elite Peplab,
 I want to place an order but I saw the notice about online payment issue.
 
 Order Details:
@@ -497,7 +469,7 @@ Price: $${selected.price}
 Please assist me with payment.`;
 const encoded=encodeURIComponent(message);
 if(type==="whatsapp"){window.open(`https://wa.me/17077531496?text=${encoded}`,"_blank");}
-if(type==="telegram"){window.open(`https://t.me/NovaPepLab?text=${encoded}`,"_blank");}
+if(type==="telegram"){window.open(`https://t.me/ElitePeptidesLab?text=${encoded}`,"_blank");}
 }
 
 /* TESTIMONIALS */
